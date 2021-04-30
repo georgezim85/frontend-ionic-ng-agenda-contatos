@@ -1,0 +1,53 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Contacts</ion-title>
+    <ion-buttons slot="end">
+      <ion-button><ion-icon name="person-add"></ion-icon></ion-button>
+      <ion-button (click)="getContacts()"><ion-icon name="refresh"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">List of contacts here</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div id="container">
+    <div *ngIf="contactList.length===0">
+      <strong class="capitalize">Empty</strong>
+    </div>
+    <div *ngIf="contactList.length>0">
+        <ion-list *ngFor="let contact of contactList; let last = last">
+          <ion-item-group>
+            <ion-item *ngIf="contact.name.trim()!==''">
+              <ion-icon slot="start" name="person"></ion-icon>
+              {{ contact.name }}
+            </ion-item>
+            <ion-item *ngIf="contact.phone.trim()!==''">
+              <ion-icon slot="start" name="call"></ion-icon>
+              {{ contact.phone }}
+            </ion-item>
+            <ion-item *ngIf="contact.email.trim()!==''">
+              <ion-icon slot="start" name="mail"></ion-icon>
+              {{ contact.email }}
+            </ion-item>
+            <ion-item *ngIf="contact.gender.trim()!==''">
+              <ion-icon slot="start" *ngIf="contact.gender=='female'" name="female"></ion-icon>
+              <ion-icon slot="start" *ngIf="contact.gender=='male'" name="male"></ion-icon>
+              {{ contact.gender }}
+            </ion-item>
+          </ion-item-group>
+          <ion-item-divider *ngIf="!last"></ion-item-divider>
+        </ion-list>
+      <p>
+        <strong class="capitalize">{{contactList.length}} {{contactTxt}} found</strong>
+      </p>
+    </div>
+  </div>
+</ion-content>
