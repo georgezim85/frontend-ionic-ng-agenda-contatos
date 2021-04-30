@@ -1,5 +1,7 @@
 {
   "name": "frontend-ionic-ng-agenda-contatos",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }
