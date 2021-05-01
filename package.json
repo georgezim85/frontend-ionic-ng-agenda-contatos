@@ -11,6 +11,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "android": "ng build; ionic capacitor run android --livereload --external",
+    "build-ionic-pwa-prod": "ionic build --prod",
     "build-android-prod": "ng run build --prod; ionic capacitor build android --prod"
   },
   "private": true,
@@ -21,6 +22,7 @@
     "@angular/platform-browser": "~11.2.0",
     "@angular/platform-browser-dynamic": "~11.2.0",
     "@angular/router": "~11.2.0",
+    "@angular/service-worker": "~11.2.0",
     "@capacitor/android": "^2.4.7",
     "@capacitor/core": "2.4.7",
     "@ionic/angular": "^5.5.2",
