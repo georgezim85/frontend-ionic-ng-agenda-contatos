@@ -1,0 +1,58 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{actionDescription}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container">
+    <form (ngSubmit)="onSubmit()" #form="ngForm" [formGroup]="validations_form">
+      <ion-input type="hidden" formControlName="id"></ion-input>
+      <ion-item>
+        <ion-label [ngClass]="inputClass('name')">Name</ion-label>
+        <ion-input class="ion-text-right" formControlName="name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label [ngClass]="inputClass('phone')">Phone</ion-label>
+        <ion-input class="ion-text-right" maxlength="255" type="tel" placeholder="(99)9999-99999" mask="(**)*****-****"
+          formControlName="phone"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label [ngClass]="inputClass('email')">Email</ion-label>
+        <ion-input class="ion-text-right" formControlName="email" pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label [ngClass]="inputClass('gender')">Gender</ion-label>
+        <ion-input class="ion-text-right" formControlName="gender"></ion-input>
+      </ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <ion-button shape="round" color="dark" (click)="closeModal()">
+              <ion-icon name="close-sharp"></ion-icon>Cancel
+            </ion-button>
+          </ion-col>
+          <ion-col size="6">
+            <ion-button shape="round" color="primary" type="submit" [disabled]="(this.validations_form.status=='INVALID')">
+              <ion-icon name="checkmark-sharp"></ion-icon>Save
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </div>
+  <div class="validation-errors">
+    <ng-container *ngFor="let validations of validation_messages | keyvalue">
+      <ng-container *ngFor="let validation of validations.value">
+        <div class="error-message" *ngIf="validations_form.get(validations.key).hasError(validation.type) && (validations_form.get(validations.key).dirty || validations_form.get(validations.key).touched)">
+          {{ validation.message }}
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</ion-content>
