@@ -10,9 +10,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "android": "npm run build; ionic capacitor run android --livereload --external",
-    "build-android": "ionic build --watch --platform=android",
-    "build-android-prod": "ionic build --prod --platform=android"
+    "android": "ng build; ionic capacitor run android --livereload --external",
+    "build-android-prod": "ng run build --prod; ionic capacitor build android --prod"
   },
   "private": true,
   "dependencies": {
