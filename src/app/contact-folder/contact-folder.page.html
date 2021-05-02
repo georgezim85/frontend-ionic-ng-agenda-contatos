@@ -5,8 +5,12 @@
     </ion-buttons>
     <ion-title>Contacts</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="showCreateForm()"><ion-icon name="person-add"></ion-icon></ion-button>
-      <ion-button (click)="refresh()"><ion-icon name="refresh"></ion-icon></ion-button>
+      <ion-button (click)="showCreateForm()">
+        <ion-icon name="person-add"></ion-icon>
+      </ion-button>
+      <ion-button (click)="refresh()">
+        <ion-icon name="refresh"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -23,33 +27,34 @@
       <strong class="capitalize">Empty</strong>
     </div>
     <div *ngIf="contactList.length>0">
-        <ion-list *ngFor="let contact of contactList; let last = last">
-          <ion-item-group>
-            <ion-item *ngIf="contact.name.trim()!==''">
-              <ion-icon slot="start" name="person"></ion-icon>
-              {{ contact.name }}
-              <ion-button (click)="showUpdateForm(contact)" slot="end"><ion-icon name="create"></ion-icon></ion-button>
-              <ion-button (click)="removeContact(contact.id)" slot="end"><ion-icon name="trash"></ion-icon></ion-button>
-            </ion-item>
-            <ion-item *ngIf="contact.phone.trim()!==''">
-              <ion-icon slot="start" name="call"></ion-icon>
-              {{ contact.phone }}
-            </ion-item>
-            <ion-item *ngIf="contact.email.trim()!==''">
-              <ion-icon slot="start" name="mail"></ion-icon>
-              {{ contact.email }}
-            </ion-item>
-            <ion-item *ngIf="contact.gender.trim()!==''">
-              <ion-icon slot="start" *ngIf="contact.gender=='female'" name="female"></ion-icon>
-              <ion-icon slot="start" *ngIf="contact.gender=='male'" name="male"></ion-icon>
-              {{ contact.gender }}
-            </ion-item>
-          </ion-item-group>
+      <ion-list>
+        <ion-item-group *ngFor="let contact of contactList; let last = last">
+          <ion-item *ngIf="contact.name.trim()!==''">
+            <ion-icon slot="start" name="person"></ion-icon>
+            {{ contact.name }}
+            <ion-button (click)="showUpdateForm(contact)" slot="end">
+              <ion-icon name="create"></ion-icon>
+            </ion-button>
+            <ion-button (click)="removeContact(contact.id)" slot="end">
+              <ion-icon name="trash"></ion-icon>
+            </ion-button>
+          </ion-item>
+          <ion-item *ngIf="contact.phone.trim()!==''">
+            <ion-icon slot="start" name="call"></ion-icon>
+            {{ contact.phone }}
+          </ion-item>
+          <ion-item *ngIf="contact.email.trim()!==''">
+            <ion-icon slot="start" name="mail"></ion-icon>
+            {{ contact.email }}
+          </ion-item>
+          <ion-item *ngIf="contact.gender.trim()!==''">
+            <ion-icon slot="start" *ngIf="contact.gender=='female'" name="female"></ion-icon>
+            <ion-icon slot="start" *ngIf="contact.gender=='male'" name="male"></ion-icon>
+            {{ contact.gender }}
+          </ion-item>
           <ion-item-divider></ion-item-divider>
-        </ion-list>
-      <ion-item>
-        {{contactList.length}} {{contactTxt}} found
-      </ion-item>
+        </ion-item-group>
+      </ion-list>
     </div>
   </div>
 </ion-content>
