@@ -9,42 +9,22 @@ export class ContactService {
         private httpClient: HttpClient
     ) { }
 
-    getContacts(token: string) {
+    getContacts() {
         return this.httpClient.get(
-            environment.backend_api_url + '/api/contacts/',
-            {
-                headers: {
-                    Authorization: 'Bearer ' + token
-                }
-            }
+            environment.backend_api_url + '/api/contacts/'
         );
     }
 
-    create(token: string, contact) {
-        return this.httpClient.post(environment.backend_api_url + '/api/contacts/', contact,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + token
-                }
-            });
+    create(contact) {
+        return this.httpClient.post(environment.backend_api_url + '/api/contacts/', contact);
     }
 
-    update(token: string, contact) {
-        return this.httpClient.patch(environment.backend_api_url + '/api/contacts/' + contact.id + '/', contact,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + token
-                }
-            });
+    update(contact) {
+        return this.httpClient.patch(environment.backend_api_url + '/api/contacts/' + contact.id + '/', contact);
     }
 
-    remove(token: string, id: number) {
-        return this.httpClient.delete(environment.backend_api_url + '/api/contacts/' + id,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + token
-                }
-            });
+    remove(id: number) {
+        return this.httpClient.delete(environment.backend_api_url + '/api/contacts/' + id);
     }
 
 }

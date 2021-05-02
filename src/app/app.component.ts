@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
 import { AuthenticationService } from './shared/services/authentication.service';
-import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-root',
@@ -19,14 +18,9 @@ export class AppComponent {
   constructor(
     private router: Router,
     private platform: Platform,
-    private authenticationService: AuthenticationService,
-    private storage: Storage
+    private authenticationService: AuthenticationService
   ) {
     this.initializeApp();
-  }
-
-  async ngOnInit() {
-    await this.storage.create();
   }
 
   initializeApp() {

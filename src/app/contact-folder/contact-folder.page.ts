@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
-import { Storage } from '@ionic/storage-angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonInfiniteScroll, ModalController } from '@ionic/angular';
 import { ContactInterface, ContactsSerie } from '../shared/interfaces/contacts.interface';
 import { ContactService } from '../shared/services/contact.service'
 import { ShowToastService } from '../shared/services/show-toast-service';
@@ -12,6 +11,7 @@ import { ContactModal } from './contact-modal/contact-modal.component';
   styleUrls: ['./contact-folder.page.scss'],
 })
 export class ContactFolderPage implements OnInit {
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   public contactList: Array<ContactInterface> = [];
   public currentSerie: ContactsSerie;
@@ -21,8 +21,7 @@ export class ContactFolderPage implements OnInit {
   constructor(
     private contactService: ContactService,
     private showToastService: ShowToastService,
-    public modalController: ModalController,
-    private storage: Storage
+    public modalController: ModalController
   ) { }
 
   ngOnInit() {
@@ -30,30 +29,24 @@ export class ContactFolderPage implements OnInit {
   }
 
   getContacts() {
-    return this.storage.get('auth-token').then((token) => {
-      this.contactService.getContacts(token).subscribe((res: any) => {
-        this.currentSerie = res;
-        this.contactList = res.results;
-        this.contactTxt = this.contactList.length==1?'contact':'contacts';
-      });
+    return this.contactService.getContacts().subscribe((res: any) => {
+      this.currentSerie = res;
+      this.contactList = res.results;
+      this.contactTxt = this.contactList.length == 1 ? 'contact' : 'contacts';
     });
   }
 
   refresh() {
-    this.storage.get('auth-token').then((token) => {
-      this.getContacts().then(() => {
-        this.showToastService.showToast('Refreshed.', 'dark');
-      })
-    });
+    this.getContacts().add(() => {
+      this.showToastService.showToast('Refreshed.', 'dark');
+    })
   }
 
   removeContact(id) {
-    return this.storage.get('auth-token').then((token) => {
-      this.contactService.remove(token, id).subscribe((res: any) => {
-        this.getContacts();
-      }).add(() => {
-        this.showToastService.showToast('Removed.', 'dark');
-      });
+    return this.contactService.remove(id).subscribe((res: any) => {
+      this.getContacts();
+    }).add(() => {
+      this.showToastService.showToast('Removed.', 'dark');
     });
   }
 
@@ -84,6 +77,23 @@ export class ContactFolderPage implements OnInit {
       this.getContacts();
     })
     await this.contactModal.present();
+  }
+
+  loadData(event) {
+    // TODO get next contact pages
+    setTimeout(() => {
+      console.log('Done');
+      event.target.complete();
+      // App logic to determine if all data is loaded
+      // and disable the infinite scroll
+      //   if (data.length == 1000) {
+      //     event.target.disabled = true;
+      //   }
+    }, 500);
+    console.log('ok');
+  }
+  toggleInfiniteScroll() {
+    this.infiniteScroll.disabled = !this.infiniteScroll.disabled;
   }
 
 }

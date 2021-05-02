@@ -3,7 +3,6 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Vali
 import { ModalController } from '@ionic/angular';
 import { ContactService } from 'src/app/shared/services/contact.service';
 import { ShowToastService } from 'src/app/shared/services/show-toast-service';
-import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'contact-modal',
@@ -40,8 +39,7 @@ export class ContactModal {
     public modalController: ModalController,
     public formBuilder: FormBuilder,
     private contactService: ContactService,
-    private showToastService: ShowToastService,
-    private storage: Storage
+    private showToastService: ShowToastService
   ) {
   }
 
@@ -82,24 +80,14 @@ export class ContactModal {
 
   onSubmit() {
     if (this.action == 'create') {
-      this.storage.get('auth-token').then((token) => {
-        this.contactService.create(token, this.validations_form.value).subscribe(() => {
-          this.showToastService.showToast('Saved.', 'dark');
-          this.closeModal();
-        });
-      }, (err) => {
-        this.showToastService.showToast(err.message, 'danger');
-        console.log(err);
+      this.contactService.create(this.validations_form.value).subscribe(() => {
+        this.showToastService.showToast('Saved.', 'dark');
+        this.closeModal();
       });
     } else if (this.action == 'update') {
-      this.storage.get('auth-token').then((token) => {
-        this.contactService.update(token, this.validations_form.value).subscribe(() => {
-          this.showToastService.showToast('Saved.', 'dark');
-          this.closeModal();
-        }, (err) => {
-          this.showToastService.showToast(err.message, 'danger');
-          console.log(err);
-        });
+      this.contactService.update(this.validations_form.value).subscribe(() => {
+        this.showToastService.showToast('Saved.', 'dark');
+        this.closeModal();
       });
     } else {
       console.log('action ' + this.action + ' isn`t valid.')

@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage-angular';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ShowToastService } from './show-toast-service';
+import { StorageService } from './storage.service';
 
 const TOKEN_KEY = 'auth-token';
 const USERNAME = 'username';
@@ -16,13 +16,13 @@ export class AuthenticationService {
   authenticationState = new BehaviorSubject(false);
 
   constructor(
-    private storage: Storage,
+    private storage: StorageService,
     private httpClient: HttpClient,
     private showToastService: ShowToastService,
   ) {
   }
 
-  onNgInit() {
+  ngOnInit() {
     this.checkToken();
   }
 
@@ -63,7 +63,10 @@ export class AuthenticationService {
   }
 
   logout() {
-    return this.storage.remove(TOKEN_KEY).then(() => {
+    return Promise.all([
+      this.storage.remove(TOKEN_KEY),
+      this.storage.remove(USERNAME)
+    ]).then(() => {
       this.authenticationState.next(false);
       window.location.reload();
     }, (err) => {

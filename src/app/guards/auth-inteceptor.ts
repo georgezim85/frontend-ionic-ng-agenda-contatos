@@ -2,71 +2,45 @@ import { Injectable } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
-  HttpErrorResponse
+  HttpInterceptor
 } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { Storage } from '@ionic/storage-angular';
-import { ShowToastService } from '../shared/services/show-toast-service';
+import { switchMap } from 'rxjs/operators';
+import { StorageService } from '../shared/services/storage.service';
+import { from } from 'rxjs';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthInterceptor implements HttpInterceptor {
 
-  public token = null;
-  public username = null;
-
   constructor(
-    private router: Router,
-    private storage: Storage,
-    private showToastService: ShowToastService
-  ) { }
-
-  onNgInit() {
-    this.getToken().then((token) => {
-      this.token = token;
-    });
-    this.getUsername().then((username) => {
-      this.username = username;
-    });
+    private storage: StorageService
+  ) {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler) {
-
-    const currentUser = this.getUsername();
-
-    if (this.token && this.username) {
-      request = request.clone({
-        setHeaders: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.token}`
-        }
-      });
-    }
-
-    return next.handle(request).pipe(tap(() => { },
-      (err: any) => {
-        if (err instanceof HttpErrorResponse) {
-          if (err.status === 400 && err.error.non_field_errors) {
-            this.showToastService.showToast(err.error.non_field_errors[0], 'danger');
-            return;
-          }
-          if (err.status !== 401) {
-            return;
-          }
-          this.router.navigate(['login']);
-        }
-      }));
+    return from(this.getToken())
+      .pipe(
+        switchMap(token => {
+          const headers = request.headers
+            .set('Authorization', 'Bearer ' + token)
+            .append('Content-Type', 'application/json');
+          const requestClone = request.clone({
+            headers
+          });
+          return next.handle(requestClone);
+        })
+      );
   }
 
-  async getUsername() {
-    const username = await this.storage.get('username');
+  getUsername() {
+    const username = this.storage.get('username');
+    console.log('username', username);
     return username;
   }
 
-  async getToken() {
-    const authToken = await this.storage.get('auth-token');
+  getToken() {
+    const authToken = this.storage.get('auth-token');
     return authToken;
   }
 

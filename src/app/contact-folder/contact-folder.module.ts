@@ -5,8 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { ContactFolderPageRoutingModule } from './contact-folder-routing.module';
 import { ContactFolderPage } from './contact-folder.page';
 import { ContactModal } from './contact-modal/contact-modal.component';
-import {IonicInputMaskModule} from "@thiagoprz/ionic-input-mask";
-import { AuthInterceptor } from '../guards/auth-inteceptor';
+import { IonicInputMaskModule } from "@thiagoprz/ionic-input-mask";
 
 @NgModule({
   imports: [
@@ -15,15 +14,14 @@ import { AuthInterceptor } from '../guards/auth-inteceptor';
     IonicModule,
     ContactFolderPageRoutingModule,
     IonicInputMaskModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   declarations: [
     ContactFolderPage,
     ContactModal
   ],
   providers: [
-    FormBuilder,
-    Storage
+    FormBuilder
   ]
 })
-export class ContactFolderPageModule {}
+export class ContactFolderPageModule { }
