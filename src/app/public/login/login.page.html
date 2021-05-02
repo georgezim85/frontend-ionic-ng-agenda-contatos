@@ -7,9 +7,13 @@
 <ion-content>
   <form (ngSubmit)="login()" #form="ngForm" [formGroup]="login_form">
   <ion-card>
-      <ion-item lines="none"><ion-input type="text" formControlName="username" placeholder="Username"></ion-input></ion-item>
-      <ion-item lines="none"><ion-input type="password" formControlName="password" placeholder="Password"></ion-input></ion-item>
-      <ion-button type="submit" expand="block">Login</ion-button>
+      <ion-item lines="none">
+        <ion-input type="text" [ngClass]="inputClass('username')" formControlName="username" placeholder="Username"></ion-input>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-input type="password" [ngClass]="inputClass('password')" formControlName="password" placeholder="Password"></ion-input>
+      </ion-item>
+      <ion-button type="submit" expand="block" [disabled]="(this.login_form.status=='INVALID')">Login</ion-button>
     </ion-card>
   </form>
   <!-- <ion-button expand="block" color="secondary" routerLink="/register" routerDirection="forward">Register</ion-button> -->

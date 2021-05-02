@@ -6,6 +6,7 @@ import { ContactFolderPageRoutingModule } from './contact-folder-routing.module'
 import { ContactFolderPage } from './contact-folder.page';
 import { ContactModal } from './contact-modal/contact-modal.component';
 import {IonicInputMaskModule} from "@thiagoprz/ionic-input-mask";
+import { AuthInterceptor } from '../guards/auth-inteceptor';
 
 @NgModule({
   imports: [

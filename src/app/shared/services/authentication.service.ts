@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { ShowToastService } from './show-toast-service';
 
 const TOKEN_KEY = 'auth-token';
+const USERNAME = 'username';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class AuthenticationService {
 
   constructor(
     private storage: Storage,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private showToastService: ShowToastService,
   ) {
   }
 
@@ -33,24 +35,30 @@ export class AuthenticationService {
         ).subscribe((res) => {
           this.authenticationState.next(true);
         }, (err) => {
-            this.authenticationState.next(false);
+          this.authenticationState.next(false);
         });
       }
     })
   }
 
   login(username: string, password: string) {
-    console.log(username);
-    console.log(password);
     return this.httpClient.post(
       environment.backend_api_url + '/api/api-token-auth/',
-      { username: username, password: password}
+      { username: username, password: password }
     ).subscribe((res: any) => {
       if (res.token) {
-        this.storage.set(TOKEN_KEY, res.token).then(() => {
+        Promise.all([
+          this.storage.set(TOKEN_KEY, res.token),
+          this.storage.set(USERNAME, username)
+        ]).then(() => {
           this.authenticationState.next(true);
-        });
+        }, (err) => {
+          console.log(err);
+        })
       }
+    }, (err) => {
+      this.showToastService.showToast(err.message, 'danger');
+      console.log(err);
     });
   }
 
@@ -58,6 +66,9 @@ export class AuthenticationService {
     return this.storage.remove(TOKEN_KEY).then(() => {
       this.authenticationState.next(false);
       window.location.reload();
+    }, (err) => {
+      this.showToastService.showToast(err.message, 'danger');
+      console.log(err);
     });
   }
 

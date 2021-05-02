@@ -1,15 +1,14 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouteReuseStrategy } from '@angular/router';
-
+import { Router, RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage-angular';
-
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { AuthInterceptor } from './guards/auth-inteceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,9 +26,15 @@ import { environment } from '../environments/environment';
     IonicStorageModule.forRoot()
   ],
   providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+
+    },
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    Storage
+    Storage,
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

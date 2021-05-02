@@ -87,12 +87,18 @@ export class ContactModal {
           this.showToastService.showToast('Saved.', 'dark');
           this.closeModal();
         });
+      }, (err) => {
+        this.showToastService.showToast(err.message, 'danger');
+        console.log(err);
       });
     } else if (this.action == 'update') {
       this.storage.get('auth-token').then((token) => {
         this.contactService.update(token, this.validations_form.value).subscribe(() => {
           this.showToastService.showToast('Saved.', 'dark');
           this.closeModal();
+        }, (err) => {
+          this.showToastService.showToast(err.message, 'danger');
+          console.log(err);
         });
       });
     } else {

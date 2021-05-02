@@ -29,22 +29,22 @@ export class ContactService {
             });
     }
 
-    update(token: string,contact) {
+    update(token: string, contact) {
         return this.httpClient.patch(environment.backend_api_url + '/api/contacts/' + contact.id + '/', contact,
-        {
-            headers: {
-                Authorization: 'Bearer ' + token
-            }
-        });
+            {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            });
     }
 
     remove(token: string, id: number) {
         return this.httpClient.delete(environment.backend_api_url + '/api/contacts/' + id,
-        {
-            headers: {
-                Authorization: 'Bearer ' + token
-            }
-        });
+            {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            });
     }
 
 }

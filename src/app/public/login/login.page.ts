@@ -39,4 +39,10 @@ export class LoginPage implements OnInit {
     );
   }
 
+  inputClass(field) {
+    if (this.login_form.get(field) !== undefined && this.login_form.get(field).status == 'INVALID') {
+      return 'invalid';
+    }
+  }
+
 }
