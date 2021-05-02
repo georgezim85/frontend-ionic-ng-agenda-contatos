@@ -2,11 +2,11 @@ export interface ContactsSerie {
     count: number;
     next: string|null;
     previous: string|null;
-    results: Array<ContactsInterface>;
+    results: Array<ContactInterface>;
 }
 
-export interface ContactsInterface {
-    id: number;
+export interface ContactInterface {
+    id?: number;
     name: string;
     gender: string;
     phone: string;

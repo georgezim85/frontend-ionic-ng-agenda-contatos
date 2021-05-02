@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { ContactsInterface, ContactsSerie } from '../shared/interfaces/contacts.interface';
+import { Storage } from '@ionic/storage-angular';
+import { ContactInterface, ContactsSerie } from '../shared/interfaces/contacts.interface';
 import { ContactService } from '../shared/services/contact.service'
 import { ShowToastService } from '../shared/services/show-toast-service';
 import { ContactModal } from './contact-modal/contact-modal.component';
@@ -12,7 +13,7 @@ import { ContactModal } from './contact-modal/contact-modal.component';
 })
 export class ContactFolderPage implements OnInit {
 
-  public contactList: Array<ContactsInterface> = [];
+  public contactList: Array<ContactInterface> = [];
   public currentSerie: ContactsSerie;
   public contactTxt: String = 'contacts';
   public contactModal: HTMLIonModalElement = null;
@@ -21,6 +22,7 @@ export class ContactFolderPage implements OnInit {
     private contactService: ContactService,
     private showToastService: ShowToastService,
     public modalController: ModalController,
+    private storage: Storage
   ) { }
 
   ngOnInit() {
@@ -28,24 +30,30 @@ export class ContactFolderPage implements OnInit {
   }
 
   getContacts() {
-    return this.contactService.getContacts().subscribe((res: any) => {
-      this.currentSerie = res;
-      this.contactList = res.results;
-      this.contactTxt = this.contactList.length==1?'contact':'contacts';
+    return this.storage.get('auth-token').then((token) => {
+      this.contactService.getContacts(token).subscribe((res: any) => {
+        this.currentSerie = res;
+        this.contactList = res.results;
+        this.contactTxt = this.contactList.length==1?'contact':'contacts';
+      });
     });
   }
 
   refresh() {
-    this.getContacts().add(() => {
-      this.showToastService.showToast('Refreshed.', 'dark');
-    })
+    this.storage.get('auth-token').then((token) => {
+      this.getContacts().then(() => {
+        this.showToastService.showToast('Refreshed.', 'dark');
+      })
+    });
   }
 
   removeContact(id) {
-    this.contactService.remove(id).subscribe((res: any) => {
-      this.getContacts();
-    }).add(() => {
-      this.showToastService.showToast('Removed.', 'dark');
+    return this.storage.get('auth-token').then((token) => {
+      this.contactService.remove(token, id).subscribe((res: any) => {
+        this.getContacts();
+      }).add(() => {
+        this.showToastService.showToast('Removed.', 'dark');
+      });
     });
   }
 

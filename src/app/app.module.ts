@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { IonicStorageModule } from '@ionic/storage-angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -19,14 +20,15 @@ import { environment } from '../environments/environment';
     AppRoutingModule,
     HttpClientModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: environment.production,
-      // Register the ServiceWorker as soon as the app is stable
-      // or after 30 seconds (whichever comes first).
+      // Register ServiceWorker only for browsers and stable or after 30 seconds
+      enabled: environment.production && document.URL.startsWith('http'),
       registrationStrategy: 'registerWhenStable:30000'
-    })
+    }),
+    IonicStorageModule.forRoot()
   ],
   providers: [
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    Storage
   ],
   bootstrap: [AppComponent],
 })

@@ -14,14 +14,15 @@ import {IonicInputMaskModule} from "@thiagoprz/ionic-input-mask";
     IonicModule,
     ContactFolderPageRoutingModule,
     IonicInputMaskModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   declarations: [
     ContactFolderPage,
     ContactModal
   ],
   providers: [
-    FormBuilder
+    FormBuilder,
+    Storage
   ]
 })
 export class ContactFolderPageModule {}

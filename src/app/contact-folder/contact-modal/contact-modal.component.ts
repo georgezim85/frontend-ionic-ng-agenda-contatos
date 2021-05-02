@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Vali
 import { ModalController } from '@ionic/angular';
 import { ContactService } from 'src/app/shared/services/contact.service';
 import { ShowToastService } from 'src/app/shared/services/show-toast-service';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'contact-modal',
@@ -40,6 +41,7 @@ export class ContactModal {
     public formBuilder: FormBuilder,
     private contactService: ContactService,
     private showToastService: ShowToastService,
+    private storage: Storage
   ) {
   }
 
@@ -68,9 +70,9 @@ export class ContactModal {
   }
 
   genderValidator(): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} | null => {
+    return (control: AbstractControl): { [key: string]: any } | null => {
       const check = control.value != 'male' && control.value != 'female';
-      return check ? {invalidValue: {value: control.value}} : null;
+      return check ? { invalidValue: { value: control.value } } : null;
     };
   }
 
@@ -80,17 +82,21 @@ export class ContactModal {
 
   onSubmit() {
     if (this.action == 'create') {
-      this.contactService.create(this.validations_form.value).subscribe(() => {
-        this.showToastService.showToast('Saved.', 'dark');
-        this.closeModal();
+      this.storage.get('auth-token').then((token) => {
+        this.contactService.create(token, this.validations_form.value).subscribe(() => {
+          this.showToastService.showToast('Saved.', 'dark');
+          this.closeModal();
+        });
       });
     } else if (this.action == 'update') {
-      this.contactService.update(this.validations_form.value).subscribe(() => {
-        this.showToastService.showToast('Saved.', 'dark');
-        this.closeModal();
+      this.storage.get('auth-token').then((token) => {
+        this.contactService.update(token, this.validations_form.value).subscribe(() => {
+          this.showToastService.showToast('Saved.', 'dark');
+          this.closeModal();
+        });
       });
     } else {
-      console.log('action ' + this.action + ' isn`t valid.' )
+      console.log('action ' + this.action + ' isn`t valid.')
     }
   }
 
