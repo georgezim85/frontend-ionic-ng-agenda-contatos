@@ -14,9 +14,9 @@ export class ContactFolderPage implements OnInit {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   public contactList: Array<ContactInterface> = [];
-  public currentSerie: ContactsSerie;
   public contactTxt: String = 'contacts';
   public contactModal: HTMLIonModalElement = null;
+  private currentPage: number = 1;
 
   constructor(
     private contactService: ContactService,
@@ -30,7 +30,6 @@ export class ContactFolderPage implements OnInit {
 
   getContacts() {
     return this.contactService.getContacts().subscribe((res: any) => {
-      this.currentSerie = res;
       this.contactList = res.results;
       this.contactTxt = this.contactList.length == 1 ? 'contact' : 'contacts';
     });
@@ -80,18 +79,23 @@ export class ContactFolderPage implements OnInit {
   }
 
   loadData(event) {
-    // TODO get next contact pages
     setTimeout(() => {
-      console.log('Done');
+      this.appendPage(++this.currentPage, event);
       event.target.complete();
-      // App logic to determine if all data is loaded
-      // and disable the infinite scroll
-      //   if (data.length == 1000) {
-      //     event.target.disabled = true;
-      //   }
     }, 500);
     console.log('ok');
   }
+
+  appendPage(page: number, event) {
+    this.contactService.getContacts(page).subscribe((res: any) => {
+      this.contactList = this.contactList.concat(res.results);
+      this.contactTxt = this.contactList.length == 1 ? 'contact' : 'contacts';
+      if (this.contactList.length == res.count) {
+        event.target.disabled = true;
+      }
+    })
+  }
+
   toggleInfiniteScroll() {
     this.infiniteScroll.disabled = !this.infiniteScroll.disabled;
   }

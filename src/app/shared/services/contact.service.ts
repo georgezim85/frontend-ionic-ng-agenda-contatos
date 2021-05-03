@@ -9,9 +9,9 @@ export class ContactService {
         private httpClient: HttpClient
     ) { }
 
-    getContacts() {
+    getContacts(page: number = 1) {
         return this.httpClient.get(
-            environment.backend_api_url + '/api/contacts/'
+            environment.backend_api_url + '/api/contacts/?page=' + page
         );
     }
 
